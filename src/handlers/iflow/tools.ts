@@ -174,6 +174,14 @@ Isn't very reliable unfourtunately.
 If you receive <host>/http/endpointlink the endpoint could also be <host>/http/endpoint/link
 
 If you use the error and it gives you 404 try getting the iflow and parsing the actual endpint
+But keep in mind that the path in the iflow is missing a prefix
+These are the prefixes based on protocol. So if you get /some/endpoint from get-iflow actual path is /http/some/endpoint for REST
+    "REST": '/http/',
+    
+    "AS2": '/as2/as2/'
+    
+    "SOAP": '/cfx/soapapi/'
+    
 		`,
 		{
 			iflowId: z
