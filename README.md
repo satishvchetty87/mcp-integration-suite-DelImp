@@ -11,6 +11,7 @@ git clone https://github.com/1nbuc/mcp-integration-suite.git
 cd mcp-integration-suite
 npm install
 npm run build
+cp .env.example .env
 ```
 Add this to your AI Clients MCP Config. 
 For Claude Desktop: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
@@ -155,6 +156,6 @@ When you need help with any integration scenario, I'll guide you through these t
 |                                                                                                                                                                                |                    |                    |                       |                |
 
 ## TODOs
-- Provide default prompt
 - CSRF implementation
-- Test Message mappings
+- B2B Management
+- Integrate other artifact types
