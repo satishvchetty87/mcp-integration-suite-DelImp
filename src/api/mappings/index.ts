@@ -64,7 +64,6 @@ export const updateMessageMapping = async (
 		headers: { "Content-Type": "application/json" },
 		data: JSON.stringify({
 			Name: id,
-			Version: "active",
 			ArtifactContent: messagemappingBuffer.toString("base64"),
 		}),
 	});
