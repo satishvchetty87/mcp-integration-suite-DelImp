@@ -53,14 +53,6 @@ export const updateMessageMapping = async (
 
 	const messagemappingBuffer = await folderToZipBuffer(messagemappingPath);
 
-	const newMapping = messageMappingDesigntimeArtifactsApi
-		.entityBuilder()
-		.fromJson({
-			Name: id,
-			Version: "active",
-			ArtifactContent: messagemappingBuffer.toString("base64"),
-		});
-
 	const url = await messageMappingDesigntimeArtifactsApi
 		.requestBuilder()
 		.getByKey(id, "active")
@@ -68,10 +60,12 @@ export const updateMessageMapping = async (
 
 	const res = await executeHttpRequest(await getCurrentDestionation(), {
 		url,
-		method: 'PUT',
-		headers: {"Content-Type": "application/json"},
-		data: JSON.stringify(newMapping.toJSON())
-		
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		data: JSON.stringify({
+			Name: id,
+			ArtifactContent: messagemappingBuffer.toString("base64"),
+		}),
 	});
 
 	if (res.status !== 200) {

@@ -3,7 +3,7 @@ import { contentReturnElement } from "./middleware";
 import { logError } from "..";
 
 export const formatError = (error: any): contentReturnElement => {
-	logError(error);
+	
 	if (error === null) {
 		return {
 			type: "text",
