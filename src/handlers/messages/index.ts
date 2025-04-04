@@ -15,6 +15,8 @@ Please only provide HTTP Path without endpoint etc if the URL is https://abc123.
 This tool can be used to test mappings together with the endpoint of iflow if_echo_mapping by updating iflow with corresponding mapping
 If you get a error response you can use get-messages functionality to find out more about the error
 If not specified otherwise the user probably wants to see the text in response
+
+Currently only non CSRF-protected endpoints are supported for POST requests
         `,
 		sendRequestSchema,
 		async ({ path, method, contentType, body, headers }) => {
