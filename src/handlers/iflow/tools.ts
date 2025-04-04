@@ -172,6 +172,8 @@ src/main/resources/scenarioflows/integrationflow/<iflow id>.iflw contains the if
 Get endpoint(s) of iflow and its URLs and Protocols
 Isn't very reliable unfourtunately.
 If you receive <host>/http/endpointlink the endpoint could also be <host>/http/endpoint/link
+
+If you use the error and it gives you 404 try getting the iflow and parsing the actual endpint
 		`,
 		{
 			iflowId: z
