@@ -1,7 +1,8 @@
 import { messageFilterSchema, sendRequestSchema } from "./types";
-import { getMessages, sendRequestToCPI } from "../../api/messages";
+import { getMessages, getMessagesCount } from "../../api/messages/messageLogs";
 import { McpServerWithMiddleware } from "../../utils/middleware";
 import { formatError } from "../../utils/customErrHandler";
+import { sendRequestToCPI } from "../../api/messages/sendMessageToCPI";
 
 export const registerMessageHandlers = (server: McpServerWithMiddleware) => {
 	server.registerTool(
@@ -46,8 +47,10 @@ If not specified otherwise the user probably wants to see the text in response
 	server.registerTool(
 		"get-messages",
 		`
-Get message processing logs
+Get message from the message monitoring
 This will include information about errors, attachements etc.
+It will only get top 50 messages because otherwise the request could get too big
+For bigger querys which don't need content of the messages consider using count-messages
 		`,
 		{
 			filterProps: messageFilterSchema,
@@ -60,6 +63,35 @@ This will include information about errors, attachements etc.
 						{
 							type: "text",
 							text: JSON.stringify({ messages }),
+						},
+					],
+				};
+			} catch (error) {
+				return {
+					isError: true,
+					content: [formatError(error)],
+				};
+			}
+		}
+	);
+
+	server.registerTool(
+		"count-messages",
+		`Count messages from the message monitoring
+This function can be usefull for making evaluations by counting messages with specific filters`,
+		{
+			filterProps: messageFilterSchema,
+		},
+		async ({ filterProps }) => {
+			try {
+				const msgCount = await getMessagesCount(filterProps);
+				return {
+					content: [
+						{
+							type: "text",
+							text: JSON.stringify({
+								success: `Found ${msgCount} messages with filter criteria`,
+							}),
 						},
 					],
 				};

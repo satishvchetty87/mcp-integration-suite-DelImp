@@ -3,7 +3,7 @@
 A ModelContextProtocol (MCP) Server for SAP Integration Suite.
 
 ## Requirements
-NodeJs and NPM (Node Version > 21 because of native NodeJS fetch)
+NodeJs and NPM (Node Version > 20 because of native NodeJS fetch)
 
 ## Installation
 ```sh
@@ -47,7 +47,17 @@ The SAP Integration Suite provides the following key capabilities:
 7. **Integration Assessment** - For defining integration landscapes
 8. **Other capabilities** including OData Provisioning, Migration Assessment, etc.
 
-This tool only focuses on cloud integration currently!
+## Artifacts within a Package
+
+An integration package can contain several types of artifacts:
+
+1. **Integration Flows (IFlows)** - The main artifact type for defining integration scenarios and message processing ✅ **(Supported)**
+2. **Message Mappings** - Define how to transform message formats between sender and receiver ✅ **(Supported)**
+3. **Script Collections** - Reusable scripts that can be referenced in integration scenarios ❌ **(Not currently supported)**
+4. **Data Types** - XML schemas (XSDs) that define the structure of messages ❌ **(Not currently supported, but can be included within IFlows)**
+5. **Message Types** - Definitions based on data types that describe message formats ❌ **(Not currently supported)**
+
+**Note:** Currently, only IFlows and Message Mappings are directly supported by the tools. Other artifacts may be included as part of an IFlow's resources.
 
 ## Available Tools and Functions
 
@@ -81,11 +91,12 @@ You can access the following tools:
    - `get-iflow-example` - Get an existing IFlow as an example
    - `list-mapping-examples` - Get all available message mapping examples
    - `get-mapping-example` - Get an example provided by list-mapping-examples
-   - `create-mapping-testiflow` - Creates an IFlow called if_echo_mapping for testing of message mappings
+   - `create-mapping-testiflow` - Creates an IFlow called if_echo_mapping for testing
 
 5. **Deployment and Monitoring**
    - `get-deploy-error` - Get deployment error information
-   - `get-messages` - Get message processing logs
+   - `get-messages` - Get message from message monitoring
+   - `count-messages` - Count messages from the message monitoring. Is useful for making summaries etc.
    - `send-http-message` - Send an HTTP request to integration suite
 
 ## Key IFlow Components
@@ -128,7 +139,9 @@ When working with IFlows, you'll interact with these components:
 
 6. **Be conservative with changes** to existing IFlows - only modify what's needed and preserve the rest.
 
-7. **For testing mappings**, use `create-mapping-testiflow` to create a test IFlow.
+7. **Message mappings typically live within IFlows**. While standalone message mappings exist (`create-empty-mapping`), in most scenarios message mappings are developed directly within the IFlow that uses them. Only create standalone mappings when specifically required.
+
+8. **For testing mappings**, use `create-mapping-testiflow` to create a test IFlow.
 
 When you need help with any integration scenario, I'll guide you through these tools and help you create effective solutions following SAP Integration Suite best practices.
 

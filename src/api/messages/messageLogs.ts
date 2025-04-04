@@ -25,42 +25,6 @@ const errStatus = ["RETRY", "FAILED", "ABANDONED", "ESCALATED", "DISCARDED"];
 
 const { integrationDesigntimeArtifactsApi } = integrationContent();
 
-export const sendRequestToCPI = async (
-	path: z.infer<typeof sendRequestSchema.path>,
-	method: z.infer<typeof sendRequestSchema.method>,
-	contentType: z.infer<typeof sendRequestSchema.contentType>,
-	body?: z.infer<typeof sendRequestSchema.body>,
-	headers?: z.infer<typeof sendRequestSchema.headers>
-): Promise<{ status: number; response: string }> => {
-	logInfo(`Executing HTTP request to CPI on ${path} METHOD: ${method}`);
-	logInfo(body);
-	logInfo(headers);
-
-	const authHeader = (await getOAuthTokenCPI()).http_header;
-
-	const reqHeaders = {
-		[authHeader.key]: authHeader.value,
-		"Content-Type": contentType,
-	};
-
-	headers?.forEach((header) => {
-		reqHeaders[header.key] = header.value;
-	});
-
-	const fullURL = `${process.env["CPI_BASE_URL"]}${path}`;
-	logInfo(`Executing request against ${fullURL}`);
-	const iflowResponse = await fetch(`${process.env["CPI_BASE_URL"]}${path}`, {
-		headers: reqHeaders,
-		body,
-		method,
-	});
-
-	return {
-		status: iflowResponse.status,
-		response: await iflowResponse.text(),
-	};
-};
-
 export const getFilters = (
 	filterProps: z.infer<typeof messageFilterSchema>
 ) => {
@@ -71,11 +35,6 @@ export const getFilters = (
 		LOG_END,
 		SENDER,
 		RECEIVER,
-		MESSAGE_GUID,
-		ADAPTER_ATTRIBUTES,
-		ATTACHMENTS,
-		CUSTOM_HEADER_PROPERTIES,
-		ERROR_INFORMATION,
 	} = messageProcessingLogsApi.schema;
 
 	const filterArr: (
@@ -118,6 +77,12 @@ export const getFilters = (
 	return and(filterArr);
 };
 
+/**
+ * Get messages from messaging log with dependencies
+ * Honestly needs refactoring
+ * @param filterProps Available filters
+ * @returns Messages with all dependencies
+ */
 export const getMessages = async (
 	filterProps: z.infer<typeof messageFilterSchema>
 ): Promise<
@@ -143,6 +108,7 @@ export const getMessages = async (
 
 	logInfo(`Found ${messageWithErrVal.length} messages`);
 
+	// Fill all dependencies of the message log entry and return the object
 	return Promise.all(
 		messageWithErrVal.map(async (message) => {
 			try {
@@ -243,6 +209,26 @@ export const getMessages = async (
 	);
 };
 
+/**
+ * Count messages of given filter
+ * @param filterProps
+ */
+export const getMessagesCount = async (
+	filterProps: z.infer<typeof messageFilterSchema>
+): Promise<number> => {
+	return messageProcessingLogsApi
+		.requestBuilder()
+		.getAll()
+		.filter(getFilters(filterProps))
+		.count()
+		.execute(await getCurrentDestionation());
+};
+
+/**
+ * Returns message media like attachement as string
+ * @param mediaId
+ * @returns Media as string
+ */
 export const getMessageMedia = async (mediaId: string): Promise<string> => {
 	logInfo(`Getting file ${mediaId}`);
 

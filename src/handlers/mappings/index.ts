@@ -12,7 +12,7 @@ import { z } from "zod";
 import { updateFiles } from "../iflow/tools";
 import { waitAndGetDeployStatus } from "../../api/deployment";
 import { formatError } from "../../utils/customErrHandler";
-import { createMappingTestIflow } from "../../api/messages";
+import { createMappingTestIflow } from "../../api/messages/messageLogs";
 
 export const registerMappingsHandler = (server: McpServerWithMiddleware) => {
 	server.registerTool(
