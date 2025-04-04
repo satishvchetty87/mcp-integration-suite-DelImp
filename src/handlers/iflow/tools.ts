@@ -165,11 +165,13 @@ src/main/resources/scenarioflows/integrationflow/<iflow id>.iflw contains the if
 			}
 		}
 	);
-
+	// Shit SAP API
 	server.registerTool(
 		"get-iflow-endpoints",
 		`
 Get endpoint(s) of iflow and its URLs and Protocols
+Isn't very reliable unfourtunately.
+If you receive <host>/http/endpointlink the endpoint could also be <host>/http/endpoint/link
 		`,
 		{
 			iflowId: z
