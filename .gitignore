@@ -7,3 +7,4 @@ serverlog.txt
 debug.log
 temp
 src/generated/**
+errorlog.txt
