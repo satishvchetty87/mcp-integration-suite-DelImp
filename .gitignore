@@ -6,4 +6,6 @@ package-lock.json
 serverlog.txt
 debug.log
 temp
+src/generated/**
+errorlog.txt
 coverage

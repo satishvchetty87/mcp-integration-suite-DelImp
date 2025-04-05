@@ -10,7 +10,7 @@ import { appendFile, mkdir, writeFile } from "fs/promises";
  * @returns All files of folder as text in a single string in Format <relative Path>\n---begin-of-file---\n<file content>\n---end-of-file---\n\
  */
 export const parseFolder = async (folderPath: string): Promise<string> => {
-	const allFiles = await glob(path.join(folderPath, "**/*"), { nodir: true });
+	const allFiles = await glob(path.join(folderPath, "**", "*").replace(/\\/g, '/'), { nodir: true });
 
 	let resultString = "";
 
@@ -21,7 +21,7 @@ export const parseFolder = async (folderPath: string): Promise<string> => {
 	}
 
 	logInfo(
-		`Done parsing ${folderPath}. Total length is  ${resultString.length}`
+		`Done parsing ${folderPath} Total length is  ${resultString.length}`
 	);
 
 	return resultString;
