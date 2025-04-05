@@ -18,7 +18,7 @@ This tool can be used to test mappings together with the endpoint of iflow if_ec
 If you get a error response you can use get-messages functionality to find out more about the error
 If not specified otherwise the user probably wants to see the text in response
 
-Currently only non CSRF-protected endpoints are supported for POST requests
+Currently only non CSRF-protected endpoints are supported for POST requests, which could be a reason for 403 or 401
         `,
 		sendRequestSchema,
 		async ({ path, method, contentType, body, headers }) => {

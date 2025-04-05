@@ -52,13 +52,13 @@ The SAP Integration Suite provides the following key capabilities:
 
 An integration package can contain several types of artifacts:
 
-1. **Integration Flows (IFlows)** - The main artifact type for defining integration scenarios and message processing ✅ **(Supported)**
+1. **Integration Flows (IFlows)** - The main artifact type for defining integration scenarios and message processing ✅ IFlow IDs are unique over packages. So if an iflow ID is provided you don't need to fetch packages. You only need a package for creating an iflow**(Supported)**
 2. **Message Mappings** - Define how to transform message formats between sender and receiver ✅ **(Supported)**
 3. **Script Collections** - Reusable scripts that can be referenced in integration scenarios ❌ **(Not currently supported)**
 4. **Data Types** - XML schemas (XSDs) that define the structure of messages ❌ **(Not currently supported, but can be included within IFlows)**
 5. **Message Types** - Definitions based on data types that describe message formats ❌ **(Not currently supported)**
-
-**Note:** Currently, only IFlows and Message Mappings are directly supported by the tools. Other artifacts may be included as part of an IFlow's resources.
+6. **packages** - Abstraction layer to group other artifacts✅ **(Supported)**
+**Note:** Currently, only IFlows, packages and Message Mappings are directly supported by the tools. Other artifacts may be included as part of an IFlow's resources.
 
 ## Available Tools and Functions
 
@@ -149,11 +149,15 @@ When you need help with any integration scenario, I'll guide you through these t
 ```
 
 ## Test results
-| Prompt                                                                                                                                                                         | Claude Desktop 3.7 | Cline + Claude 3.7 | Cline + Deepseek chat | Goose + GPT 4o |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|--------------------|-----------------------|----------------|
-| create a message mapping called mm_invoice_demo in  package <package> which mapps two diffrent invoice datatypes.  Generate the datatypes as well.                             |          ☑️         |          ☑️         |           ☑️           |                |
-| create a new iflow in package aigen (already exists) with  name if_simple_httpit should receive data via http  on /simplehttp and send data  to demo.endpoint.de via HTTP Post |                    |                    |                       |                |
-|                                                                                                                                                                                |                    |                    |                       |                |
+These are some little more complex tasks I ran with multiple models. It is possible that individual results differ from these 
+| Prompt                                                                                                                                                                                                                                                                                                                                                                                             | Claude Desktop 3.7 | Cline + Claude 3.7 | Cline + Deepseek chat | Cline + Gemini 2.5 |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------:|:------------------:|:---------------------:|:------------------:|
+| create a message mapping called mm_invoice_demo in  package <package> which mapps two diffrent invoice datatypes.  Generate the datatypes as well.                                                                                                                                                                                                                                                 |         ❌*         |          ✅         |           ❌           |          ✅         |
+| create a new iflow in package <package> with  name if_simple_http it should receive data via http  on /simplehttp and send data  to https://echo.free.beeceptor.com via HTTP Post                                                                                                                                                                                                                  |          ✅         |          ✅         |           ❌           |                    |
+| create a new iflow in package <package> with name if_ai_invoice it should receive data via http on /invoicecreate and send data to https://echo.free.beeceptor.com via HTTP Post. It also should include a message mapping with XSD.  The XSDs should contain invoice relevant data.  Source and Destination XSD should have some differences which should  be eliminated with the message mapping |         ❌*         |          ✅         |           ❌           |          ✅         |
+| Send a HTTP POST message with body {"hello": "world"} to iflow if_simple_http and show the response                                                                                                                                                                                                                                                                                                |          ✅         |          ✅         |           ✅           |          ✅         |
+| Get all messages with errors from the last two days                                                                                                                                                                                                                                                                                                                                                |          ✅         |          ✅         |           ✅           |          ✅         |
+| How much messages were processed this year per iflow accross all packages                                                                                                                                                                                                                                                                                                                          |          ✅         |          ✅         |           ✅           |          ✅         |
 
 ## TODOs
 - CSRF implementation
