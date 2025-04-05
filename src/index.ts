@@ -7,8 +7,8 @@ import { registerAllHandlers } from "./handlers";
 import { config } from "dotenv";
 
 import { exit } from "process";
-import "./utils/logging.js";
-import { writeToErrLog, writeToLog } from "./utils/logging.js";
+import "./utils/logging"; // Removed .js again
+import { writeToErrLog, writeToLog } from "./utils/logging"; // Removed .js again
 import { McpServerWithMiddleware } from "./utils/middleware";
 
 process.on("uncaughtException", (err) => {
@@ -50,10 +50,14 @@ export const logInfo = (msg: any): void => {
 	} catch {}
 };
 
-main()
+if (!process.env.JEST_WORKER_ID) {
+	main()
 	.catch((err) => {
 		logError(err);
 		console.error(err);
 		exit(1);
 	})
 	.then(() => writeToLog("server started"));
+
+}
+
