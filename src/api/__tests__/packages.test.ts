@@ -4,6 +4,7 @@ import { createPackage, getPackage, getPackages } from "../packages/index";
 import { integrationContent, IntegrationPackages } from "../../generated/IntegrationContent/index";
 import dotenv from 'dotenv';
 import { getCurrentDestionation } from "../api_destination";
+import { deletePackage } from "./helpers";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -37,10 +38,7 @@ describe("Package Management API", () => {
         }
     });
 
-    afterAll(async() => {
-        const { integrationPackagesApi } = integrationContent();
-        await integrationPackagesApi.requestBuilder().delete(testPackageId).execute(await getCurrentDestionation());
-    });
+
 
     it("should create a new package", async () => {
         // This test implicitly relies on the beforeAll hook.
@@ -84,6 +82,7 @@ describe("Package Management API", () => {
         }
     });
 
-    // Removed redundant todo as afterAll handles cleanup
-
+    afterAll(async() => {
+        await deletePackage(testPackageId);
+    });
 });

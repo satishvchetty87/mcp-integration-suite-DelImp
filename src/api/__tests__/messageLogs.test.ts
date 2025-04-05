@@ -9,6 +9,7 @@ import { getAllIflowsByPackage, deployIflow } from "../iflow/index"; // Need to 
 import { waitAndGetDeployStatus, getDeploymentErrorReason } from "../deployment"; // Need deployment status check
 import dotenv from 'dotenv';
 import moment from 'moment';
+import { deletePackage } from "./helpers";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -128,8 +129,8 @@ describe("Message Log API", () => {
     it.todo("Test getMessageMedia (requires known messageGuid and attachment ID)");
 
 
-    // Add placeholder tests for cleanup reminder
-    it.todo("Manual cleanup required: Delete test iflow '" + testIflowId + "'");
-    it.todo("Manual cleanup required: Delete test package '" + testPackageId + "'");
+    afterAll(async() => {
+        await deletePackage(testPackageId);
+    });
 
 });

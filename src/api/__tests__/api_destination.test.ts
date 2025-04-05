@@ -96,7 +96,7 @@ describe("API Destination Handling", () => {
 
 
         // Temporarily skip this test due to persistent environment variable/fetch issues within Jest
-        it.skip("should return OAuth destination if OAuth env vars are set", async () => {
+        it("should return OAuth destination if OAuth env vars are set", async () => {
             // Add specific check for API_OAUTH_TOKEN_URL as well, as getOAuthToken now requires it
             if (!process.env.API_BASE_URL || !process.env.API_OAUTH_CLIENT_ID || !process.env.API_OAUTH_CLIENT_SECRET || !process.env.API_OAUTH_TOKEN_URL) {
                 console.warn("Skipping getCurrentDestionation (OAuth) test: Required environment variables (API_BASE_URL, API_OAUTH_CLIENT_ID, API_OAUTH_CLIENT_SECRET, API_OAUTH_TOKEN_URL) are not set.");

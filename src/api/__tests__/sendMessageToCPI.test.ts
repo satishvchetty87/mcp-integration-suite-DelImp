@@ -73,7 +73,7 @@ describe("Send Message to CPI API", () => {
     // This is less reliable as it depends on previous test suites' success
     // Skipping due to flakiness
     it.skip("should attempt to send a POST request to the echo mapping iflow (if available)", async () => {
-        const echoIflowId = "if_echo_mapping";
+        const echoIflowId = "if_simple_http_cld";
         let echoEndpointPath: string | undefined = undefined;
 
         // Try to find the endpoint dynamically - might fail if not deployed or endpoint format changes

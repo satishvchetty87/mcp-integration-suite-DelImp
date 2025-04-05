@@ -12,6 +12,7 @@ import { waitAndGetDeployStatus, getDeploymentErrorReason } from "../deployment"
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs/promises';
+import { deletePackage } from "./helpers";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -222,8 +223,8 @@ describe("Message Mapping Management API", () => {
      });
 
 
-    // Add placeholder tests for cleanup reminder
-    it.todo("Manual cleanup required: Delete test mapping '" + testMappingId + "'");
-    it.todo("Manual cleanup required: Delete test package '" + testPackageId + "'");
+    afterAll(async() => {
+        await deletePackage(testPackageId);
+    });
 
 });
