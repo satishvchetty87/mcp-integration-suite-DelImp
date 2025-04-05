@@ -8,7 +8,7 @@ import { config } from "dotenv";
 
 import { exit } from "process";
 import "./utils/logging.js";
-import { writeToLog } from "./utils/logging.js";
+import { writeToErrLog, writeToLog } from "./utils/logging.js";
 import { McpServerWithMiddleware } from "./utils/middleware";
 
 process.on("uncaughtException", (err) => {
@@ -36,7 +36,7 @@ async function main() {
 }
 
 export const logError = (msg: any): void => {
-	writeToLog(msg);
+	writeToErrLog(msg);
 	try {
 		// just causes lots of error messages on most client because it is not implemented
 		//server.server.sendLoggingMessage({level: "error", data: JSON.stringify(msg)});

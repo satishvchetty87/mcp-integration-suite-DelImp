@@ -5,7 +5,7 @@ import { glob } from "glob";
 import { mkdtemp, readFile, rm } from "fs/promises";
 // returns base64 image png
 export const getiFlowToImage = async (iflowPath: string): Promise<string> => {
-	const iflowXmPath = (await glob(iflowPath + "/**/*.iflw"))[0];
+	const iflowXmPath = (await glob(iflowPath.replace(/\\/g, '/') + "/**/*.iflw"))[0];
 
 	if (!iflowXmPath) {
 		throw new Error("Could not locate iflow XML");
