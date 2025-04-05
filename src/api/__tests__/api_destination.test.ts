@@ -1,9 +1,5 @@
 import { getOAuthToken, getCurrentDestionation } from "../api_destination";
-import { AuthenticationType } from "@sap-cloud-sdk/connectivity";
-import dotenv from 'dotenv';
 
-// Load environment variables from .env file
-dotenv.config();
 
 describe("API Destination Handling", () => {
     // Increase timeout for network requests
@@ -125,11 +121,7 @@ describe("API Destination Handling", () => {
         });
 
         it("should return Basic Auth destination if Basic Auth env vars are set (and OAuth is not)", async () => {
-             // This test assumes OAuth vars are NOT set, or Basic takes precedence if both are somehow set (though the code prioritizes OAuth)
-             if (process.env.API_OAUTH_CLIENT_ID || process.env.API_OAUTH_CLIENT_SECRET || process.env.API_OAUTH_TOKEN_URL) {
-                 console.warn("Skipping getCurrentDestionation (Basic) test: OAuth variables seem to be present, which take precedence.");
-                 return;
-             }
+
             if (!process.env.API_BASE_URL || !process.env.API_USER || !process.env.API_PASS) {
                 console.warn("Skipping getCurrentDestionation (Basic) test: Required environment variables (API_BASE_URL, API_USER, API_PASS) are not set.");
                 return;
