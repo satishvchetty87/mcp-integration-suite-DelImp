@@ -10,9 +10,5 @@ module.exports = {
 	collectCoverage: true,
 	coverageDirectory: "coverage",
 	coverageReporters: ["text", "lcov"],
-	verbose: true,
-	// Map only the @generated alias to the compiled output in dist/generated for Jest
-	moduleNameMapper: {
-		'^@generated/(.*)$': '<rootDir>/dist/generated/$1'
-	}
+	coverageProvider: 'v8'
 };
