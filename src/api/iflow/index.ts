@@ -1,4 +1,4 @@
-import { integrationContent } from "../../generated/IntegrationContent/service";
+
 import { extractToFolder, folderToZipBuffer } from "../../utils/zip";
 import { getCurrentDestionation, getOAuthToken } from "../api_destination";
 import { updateFiles } from "../../handlers/iflow/tools";
@@ -8,6 +8,7 @@ import semver from "semver";
 import {
 	Configurations,
 	deployIntegrationDesigntimeArtifact,
+	integrationContent,
 	IntegrationDesigntimeArtifacts,
 	integrationDesigntimeArtifactSaveAsVersion,
 	ServiceEndpoints,

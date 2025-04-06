@@ -1,7 +1,6 @@
-import { IntegrationPackages } from "../../generated/IntegrationContent/index.js";
-import { IntegrationPackagesApi } from "../../generated/IntegrationContent/IntegrationPackagesApi.js";
-import { integrationContent } from "../../generated/IntegrationContent/service.js";
-import { getCurrentDestionation } from "../api_destination.js";
+
+import { integrationContent } from "../../generated/IntegrationContent";
+import { getCurrentDestionation } from "../api_destination"; // Removed .js again
 
 const { integrationPackagesApi } = integrationContent();
 

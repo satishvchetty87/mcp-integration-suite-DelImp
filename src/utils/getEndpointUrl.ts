@@ -29,16 +29,16 @@ export const getEndpointUrl = (endpoint: ServiceEndpoints): string => {
     const endpointIdentifier = endpoint.id.split('=')[1];
 
     if (!endpointIdentifier || ! endpoint.protocol) {
-        logInfo('Could not find endpoint identifier:');
-        logInfo(JSON.stringify(endpoint.toJSON()));
+        logInfo('Could not find endpoint identifier for endpoint object:');
+        logInfo(JSON.stringify(endpoint)); // Log the raw object, remove .toJSON()
         return '';
     }
 
     const protocolObj = cpiProtocolMap[endpoint.protocol];
 
     if (!protocolObj) {
-        logInfo('Unsupported Protocol');
-        logInfo(JSON.stringify(endpoint.toJSON()));
+        logInfo('Unsupported Protocol for endpoint object:');
+        logInfo(JSON.stringify(endpoint)); // Log the raw object, remove .toJSON()
         return '';
     }
 

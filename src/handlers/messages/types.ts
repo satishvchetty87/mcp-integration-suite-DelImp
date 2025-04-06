@@ -61,5 +61,7 @@ export const messageFilterSchema = z
         .describe("filter by message statuses"),
     sender: z.string().optional().describe("Filter by message sender"),
     receiver: z.string().optional().describe("Filter by message receiver"),
+    msgGUID: z.string().optional().describe("Unique message ID"),
+    
 })
 .describe("available filtering options");

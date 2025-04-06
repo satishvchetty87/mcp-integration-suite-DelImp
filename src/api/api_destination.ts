@@ -18,6 +18,10 @@ export const getOAuthToken = async (): Promise<DestinationAuthToken> => {
 	if (tokenCache && tokenCache.expiresAt > now + 5 * 60 * 1000) {
 		return tokenCache.token;
 	}
+	// Add check for token URL existence
+	if (!process.env.API_OAUTH_TOKEN_URL) {
+		throw new Error("API_OAUTH_TOKEN_URL environment variable is not set.");
+	}
 	const params = new URLSearchParams();
 	params.append("grant_type", "client_credentials");
 	params.append("client_id", process.env.API_OAUTH_CLIENT_ID as string);

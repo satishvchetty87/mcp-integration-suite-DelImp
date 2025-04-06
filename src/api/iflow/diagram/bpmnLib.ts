@@ -38,7 +38,7 @@ async function printDiagram(page: puppeteer.Page, options: DiagramOptions): Prom
 
   await page.goto(`file://${path.join(projPath, 'resources', 'Diagram', 'skeleton.html')}`);
 
-  const desiredViewport = await page.evaluate(async function(diagramXML: string, options: any): Promise<ViewportDimensions> {
+  const desiredViewport = await page.evaluate(async function (diagramXML: string, options: any): Promise<ViewportDimensions> {
     const {
       ...openOptions
     } = options;
@@ -130,7 +130,7 @@ async function convertAll(conversions: Conversion[], options: ConversionOptions 
     deviceScaleFactor
   } = options;
 
-  await withPage(async function(page) {
+  await withPage(async function (page) {
     for (const conversion of conversions) {
       const {
         input,
@@ -148,13 +148,4 @@ async function convertAll(conversions: Conversion[], options: ConversionOptions 
   });
 }
 
-async function convert(input: string, output: string): Promise<void> {
-  return await convertAll([
-    {
-      input,
-      outputs: [output]
-    }
-  ]);
-}
-
-export { convertAll, convert };
+export { convertAll };

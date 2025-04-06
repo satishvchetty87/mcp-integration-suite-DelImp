@@ -35,6 +35,7 @@ export const getFilters = (
 		LOG_END,
 		SENDER,
 		RECEIVER,
+		MESSAGE_GUID
 	} = messageProcessingLogsApi.schema;
 
 	const filterArr: (
@@ -73,6 +74,8 @@ export const getFilters = (
 	if (filterProps.sender) filterArr.push(SENDER.equals(filterProps.sender));
 	if (filterProps.receiver)
 		filterArr.push(RECEIVER.equals(filterProps.receiver));
+
+	if (filterProps.msgGUID) filterArr.push(MESSAGE_GUID.equals(filterProps.msgGUID));
 
 	return and(filterArr);
 };
