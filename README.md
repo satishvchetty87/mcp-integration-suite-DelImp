@@ -1,3 +1,4 @@
+DISCLAIMER: This server is still experimental. Use at your own risk!
 # MCP Integration Suite Server
 
 A ModelContextProtocol (MCP) Server for SAP Integration Suite.
