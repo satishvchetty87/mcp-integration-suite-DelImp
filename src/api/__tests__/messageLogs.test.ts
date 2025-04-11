@@ -31,7 +31,7 @@ describe("Message Log API", () => {
             throw new Error("Missing required environment variables for API connection (URL and Auth). Skipping Message Log tests.");
         }
         // Create a unique package for this test run (no underscores)
-        testPackageId = `${testPackageIdBase}${Date.now()}`; // Removed underscore
+        testPackageId = testPackageIdBase; // Removed underscore
         try {
             console.log(`Attempting to create test package for message logs: ${testPackageId}`);
             await createPackage(testPackageId, `Jest MsgLog Test Pkg`, `Temp pkg for Jest MsgLog tests`);

@@ -34,7 +34,7 @@ describe("Message Mapping Management API", () => {
             throw new Error("Missing required environment variables for API connection (URL and Auth). Skipping Mapping tests.");
         }
         // Create a unique package for this test run (no underscores)
-        testPackageId = `${testPackageIdBase}${Date.now()}`; // Removed underscore
+        testPackageId = testPackageIdBase; // Removed underscore
         try {
             console.log(`Attempting to create test package for mappings: ${testPackageId}`);
             await createPackage(testPackageId, `Jest Mapping Test Pkg`, `Temp pkg for Jest Mapping tests`);

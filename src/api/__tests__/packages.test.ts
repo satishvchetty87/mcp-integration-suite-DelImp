@@ -13,7 +13,7 @@ describe("Package Management API", () => {
     // Increase timeout for network requests
     jest.setTimeout(60000); // 60 seconds for potentially multiple API calls
 
-    const testPackageId = `jesttestpkg${Date.now()}`; // Use timestamp for uniqueness, no underscores
+    const testPackageId = `jesttestpkg`; // Use timestamp for uniqueness, no underscores
     let packageCreated = false;
 
     // Check prerequisites before running tests
