@@ -10,6 +10,8 @@ import { exit } from "process";
 import "./utils/logging"; // Removed .js again
 import { writeToErrLog, writeToLog } from "./utils/logging"; // Removed .js again
 import { McpServerWithMiddleware } from "./utils/middleware";
+import './utils/exitHandler';
+import { registerDeleteTempOnExit } from "./utils/exitHandler";
 
 process.on("uncaughtException", (err) => {
 	logError(err);
@@ -30,6 +32,7 @@ const server = new McpServerWithMiddleware({
 registerAllHandlers(server);
 
 async function main() {
+	registerDeleteTempOnExit();
 	const transport = new StdioServerTransport();
 
 	await server.connect(transport);
@@ -40,24 +43,24 @@ export const logError = (msg: any): void => {
 	try {
 		// just causes lots of error messages on most client because it is not implemented
 		//server.server.sendLoggingMessage({level: "error", data: JSON.stringify(msg)});
-	} catch {}
+	} catch { }
 };
 
 export const logInfo = (msg: any): void => {
 	writeToLog(msg);
 	try {
 		//server.server.sendLoggingMessage({level: "info", data: JSON.stringify(msg)});
-	} catch {}
+	} catch { }
 };
 
 if (!process.env.JEST_WORKER_ID) {
 	main()
-	.catch((err) => {
-		logError(err);
-		console.error(err);
-		exit(1);
-	})
-	.then(() => writeToLog("server started"));
+		.catch((err) => {
+			logError(err);
+			console.error(err);
+			exit(1);
+		})
+		.then(() => writeToLog("server started"));
 
 }
 
