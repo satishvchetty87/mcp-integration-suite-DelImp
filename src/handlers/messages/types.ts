@@ -62,6 +62,8 @@ export const messageFilterSchema = z
     sender: z.string().optional().describe("Filter by message sender"),
     receiver: z.string().optional().describe("Filter by message receiver"),
     msgGUID: z.string().optional().describe("Unique message ID"),
+	
+	applicationMessageId: z.string().optional().describe("Filter by Application Message ID e.g. invoice number, BP ID or sales order ID passed via SAP_ApplicationID header"),
     
 })
 .describe("available filtering options");

@@ -21,7 +21,15 @@ const getDocsMap = () => {
     return resultObj;
 }
 
-const docsMap: { [key: string]: string } = getDocsMap();
+// FIXED: lazy-load instead of loading at startup
+let docsMap: { [key: string]: string } | null = null;
+
+const getOrLoadDocsMap = (): { [key: string]: string } => {
+    if (!docsMap) {
+        docsMap = getDocsMap();
+    }
+    return docsMap;
+};
 
 export const registerDocsHandlers = (server: McpServerWithMiddleware) => {
     server.registerToolIntegrationSuite("get-docs",
@@ -53,11 +61,10 @@ If not provided it returns the index`).optional()
         matchAll: z.boolean().describe("If true it must match all keywords, if false only one of the provided keywords")
     }, async ({ keywords, matchAll }) => {
         try {
-
-
+            // FIXED: use getOrLoadDocsMap() instead of docsMap directly
             const matches: { [key: string]: string } = {};
 
-            Object.entries(docsMap).forEach(docPage => {
+            Object.entries(getOrLoadDocsMap()).forEach(docPage => {
                 const [key, value] = docPage;
 
                 let hasUnmatchedKeyword = false;
