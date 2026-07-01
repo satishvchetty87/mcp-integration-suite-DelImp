@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logInfo } from "../..";
+import { logInfo } from "../../utils/shared";
 import { sendRequestSchema } from "../../handlers/messages/types";
 import { getOAuthTokenCPI } from "../cpi_auth";
 

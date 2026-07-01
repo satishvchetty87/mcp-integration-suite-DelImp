@@ -1,5 +1,5 @@
 import path from "path";
-import { projPath } from "../..";
+import { projPath } from "../../utils/shared";
 
 const resourceBasePath = path.resolve(projPath, "./resources/examples/iflows/");
 

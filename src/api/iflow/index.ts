@@ -13,7 +13,7 @@ import {
 	integrationDesigntimeArtifactSaveAsVersion,
 	ServiceEndpoints,
 } from "../../generated/IntegrationContent";
-import { logInfo } from "../..";
+import { logInfo } from "../../utils/shared";
 import { parseFolder, patchFile } from "../../utils/fileBasedUtils";
 import { getEndpointUrl } from "../../utils/getEndpointUrl";
 const {

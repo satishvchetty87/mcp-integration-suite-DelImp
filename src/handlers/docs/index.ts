@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { McpServerWithMiddleware } from "../../utils/middleware";
-import { logError, projPath } from "../..";
+import { logError, projPath } from "../../utils/shared";
 import fsAsync from 'fs/promises';
 import fs from 'fs';
 import path from "path";

@@ -3,7 +3,7 @@ import {
 	messageFilterSchema,
 	sendRequestSchema,
 } from "../../handlers/messages/types";
-import { logInfo, projPath } from "../..";
+import { logInfo, projPath } from "../../utils/shared";
 import { getOAuthTokenCPI } from "../cpi_auth";
 import {
 	MessageProcessingLogs,

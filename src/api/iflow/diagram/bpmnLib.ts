@@ -4,7 +4,7 @@ import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import path, { basename, resolve, relative } from 'path';
 import { readFileSync } from 'fs';
-import { projPath } from '../../..';
+import { projPath } from '../../../utils/shared';
 
 interface DiagramOptions {
   input: string;

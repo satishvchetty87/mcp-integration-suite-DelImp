@@ -10,7 +10,7 @@ import {
 	saveAsNewVersion,
 	updateIflow,
 } from "../../api/iflow";
-import { logError, logInfo } from "../..";
+import { logError, logInfo } from "../../utils/shared";
 import { getiFlowToImage } from "../../api/iflow/diagram";
 import { McpServerWithMiddleware } from "../../utils/middleware";
 import {

@@ -2,7 +2,7 @@
 import path from "path";
 import { z } from "zod";
 import { parseFolder } from "../../utils/fileBasedUtils";
-import { projPath } from "../..";
+import { projPath } from "../../utils/shared";
 import { availableExamples } from "../../api/iflow/examples";
 import { McpServerWithMiddleware } from "../../utils/middleware";
 

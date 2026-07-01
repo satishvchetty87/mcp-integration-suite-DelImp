@@ -1,5 +1,5 @@
 import path from "path";
-import { projPath } from "../../..";
+import { projPath } from "../../../utils/shared";
 import { convertAll } from "./bpmnLib";
 import { glob } from "glob";
 import { mkdtemp, readFile, rm } from "fs/promises";

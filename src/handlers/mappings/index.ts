@@ -1,4 +1,4 @@
-import { logError, logInfo } from "../..";
+import { logError, logInfo } from "../../utils/shared";
 import {
 	createMessageMapping,
 	deployMapping,

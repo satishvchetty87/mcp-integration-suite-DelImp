@@ -1,0 +1,10 @@
+node_modules
+src
+.env
+serverlog.txt
+errorlog.txt
+temp
+coverage
+.git
+*.md
+tsconfig.json

@@ -1,7 +1,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import { projPath } from "../..";
+import { projPath } from "../../utils/shared";
 import { McpServerWithMiddleware } from "../../utils/middleware";
 
 const resourceDiscoverPath = path.resolve(projPath, "./resources/Discover");

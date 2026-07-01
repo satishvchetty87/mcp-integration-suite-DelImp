@@ -1,4 +1,4 @@
-import { logInfo } from "../..";
+import { logInfo } from "../../utils/shared";
 import {
 	deployMessageMappingDesigntimeArtifact,
 	integrationContent,
