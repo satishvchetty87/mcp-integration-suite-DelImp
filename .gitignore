@@ -9,3 +9,4 @@ temp
 src/generated/**
 errorlog.txt
 coverage
+manifest.yml
