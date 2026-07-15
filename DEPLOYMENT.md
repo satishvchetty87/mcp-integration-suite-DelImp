@@ -47,7 +47,16 @@ On Cloud Foundry the HTTP entry point ([src/server-http.ts](src/server-http.ts))
 | `DELETE /mcp` | Terminate an MCP session |
 | anything else | `404` |
 
-> ⚠️ The transport is **Streamable HTTP**, *not* SSE. There is no `/sse` endpoint.
+> ⚠️ **Transport: Streamable HTTP — this is what Joule requires.** It is the current MCP HTTP
+> transport and replaces the older, now-deprecated **HTTP+SSE** transport. Consequently there
+> is no `/sse` endpoint here, and every client (Joule, the MCP Inspector, etc.) must be set to
+> *Streamable HTTP*, not SSE.
+
+In the CF Applications list this is the difference between the two apps:
+`mcp-integration-suite-chris` runs the **HTTP (Streamable HTTP)** entry point used by Joule,
+while the older `mcp-integration-suite` runs the deprecated **SSE** transport.
+
+![CF applications — HTTP (this app) vs the older SSE app](Figures/cf-application-sse-vs-http.png)
 
 The app reads its SAP Integration Suite credentials from **environment variables**
 (see [Section 6](#6-configure-credentials-environment-variables)). On Cloud Foundry the
@@ -203,37 +212,50 @@ target).
 
 ## 9. Connect to Joule
 
-Joule reaches this server over its Streamable HTTP endpoint at **`https://<CF_ROUTE>/mcp`**.
+Connecting Joule is two steps: create a **BTP destination** that points at this server, then
+add it as an **MCP Server** inside **Joule Studio**.
 
-> 🔒 **Security:** the `/mcp` endpoint is currently **unauthenticated** — see
-> [Securing the endpoint](#10-securing-the-endpoint) before exposing it. Whatever
-> authentication you add there must also be configured on this Joule destination.
+> 🔒 **Security:** the `/mcp` endpoint is currently **unauthenticated**, and the destination
+> below uses `NoAuthentication` to match — see [Securing the endpoint](#10-securing-the-endpoint)
+> before exposing it. Once you add authentication to the server, update this destination's
+> **Authentication** to match.
 
-### Steps
+### 9.1 Create the BTP destination
 
-<!-- TODO(yves): drop screenshots into docs/img/ and fill in the exact navigation below. -->
+In **BTP Cockpit → the subaccount where Joule Studio runs** (here *SAP Build - Suite*, which
+may differ from the CF org/space where the app is deployed) → **Connectivity → Destinations →
+Create**:
 
-1. **Where:** _(add screenshot — where in Joule / AI Launchpad the MCP connection is created)_
+| Field | Value |
+|---|---|
+| Name | e.g. `MCP_INTEGRATION_CHRIS` (you reference this from Joule Studio) |
+| Type | `HTTP` |
+| URL | the app's **base route** — e.g. `https://mcp-integration-suite-chris.cfapps.eu20.hana.ondemand.com` |
+| Proxy Type | `Internet` |
+| Authentication | `NoAuthentication` (until the endpoint is secured — see §10) |
+| **Additional Property** | **`sap-joule-studio-mcp-server` = `true`** |
 
-   ![Where to create the MCP destination](docs/img/joule-01-location.png)
+The `sap-joule-studio-mcp-server = true` additional property is what makes Joule Studio
+recognise the destination as an MCP server — without it, it won't appear in the Joule Studio
+dropdown. The URL is the **base route with no `/mcp` suffix**; Joule targets the server's
+`/mcp` endpoint from it.
 
-2. **Create the MCP destination / connection** with these fields:
+![MCP server destination in BTP Cockpit](Figures/mcp-destination-inBTP.png)
 
-   | Field | Value |
-   |---|---|
-   | Name | _(e.g. `mcp-integration-suite`)_ |
-   | URL / Server endpoint | `https://<CF_ROUTE>/mcp` |
-   | Transport | Streamable HTTP |
-   | Authentication | _(as required by your Joule setup — see screenshot)_ |
+### 9.2 Add the MCP server in Joule Studio
 
-   ![MCP destination fields](docs/img/joule-02-fields.png)
+In **Joule Studio**, open (or create) an agent → **MCP Servers** tab → **Add MCP Server**:
 
-3. **Verify** the connection / list the tools from within Joule.
+| Field | Value |
+|---|---|
+| Name | a label for the server, e.g. `mcp integration specialist` |
+| Description for Agent | when the agent should use it, e.g. *"use this mcp to retrieve all tools necessary to build, change and retrieve mappings of integrations…"* |
+| Destination | the destination from §9.1 (`MCP_INTEGRATION_CHRIS`) |
 
-   ![Verifying the connection](docs/img/joule-03-verify.png)
+Once the destination is selected, Joule discovers and lists the server's tools (`packages`,
+`package`, `create-package`, `get-iflow`, …). Click **Apply**, then **Save** the agent.
 
-> _Screenshots to be added by Yves. Place image files in `docs/img/` so the links above
-> resolve._
+![Adding the MCP server in Joule Studio](Figures/Joule-mcp-adding.png)
 
 ---
 
