@@ -4,9 +4,6 @@ This guide covers running the MCP Integration Suite server as a **remote HTTP se
 SAP BTP Cloud Foundry** and connecting it to **Joule**. For local `stdio` usage with
 Claude Desktop / Cline, see the main [README](README.md) instead.
 
-> ℹ️ On Windows, this project lives under a WSL path. Run all `npm` / `cf` commands from a
-> **WSL terminal** in the project directory.
-
 > ⚠️ **Security:** the deployed `/mcp` endpoint is currently **unauthenticated** — anyone who
 > can reach the route can run every tool against your Integration Suite tenant. Read
 > [Securing the endpoint](#10-securing-the-endpoint) before exposing it beyond a trusted,
@@ -328,7 +325,7 @@ Joule *at this server*; this one points *this server at the CPI API*.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `Proxy Server PORT IS IN USE at port 6277` | A previous MCP Inspector run left orphaned node processes (the proxy on `6277`, client on `6274`). | `lsof -ti :6277 -ti :6274 \| xargs -r kill` (in WSL), or start with `SERVER_PORT=6278 CLIENT_PORT=6275 npx @modelcontextprotocol/inspector`. Stop the Inspector with `Ctrl+C` to avoid orphans. |
+| `Proxy Server PORT IS IN USE at port 6277` | A previous MCP Inspector run left orphaned node processes (the proxy on `6277`, client on `6274`). | `lsof -ti :6277 -ti :6274 \| xargs -r kill` (macOS/Linux), or start with `SERVER_PORT=6278 CLIENT_PORT=6275 npx @modelcontextprotocol/inspector`. Stop the Inspector with `Ctrl+C` to avoid orphans. |
 | `404` when connecting | Wrong path or transport. The server only serves `/mcp` over **Streamable HTTP**; every other URL returns `404`, and there is no `/sse`. | Set URL to `https://<CF_ROUTE>/mcp` and Transport to `Streamable HTTP`. |
 | `Error: No API Url provided in project .env file` | `API_BASE_URL` is empty at runtime. On CF this means env vars weren't set, or were set but the app wasn't restaged. Editing the local `.env` has no effect on CF. | Run the `cf set-env` commands (Section 6) then `cf restage`. Confirm with `cf env <app>`. |
 | Tools fail after `cf set-env` | App still running with old environment. | `cf restage mcp-integration-suite-chris` (or `cf restart`). |
