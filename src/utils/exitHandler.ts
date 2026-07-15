@@ -1,5 +1,5 @@
 import { rimrafSync } from "rimraf";
-import { logInfo, projPath } from "..";
+import { logInfo, projPath } from "./shared";
 import path from "path";
 
 export const registerDeleteTempOnExit = () => {

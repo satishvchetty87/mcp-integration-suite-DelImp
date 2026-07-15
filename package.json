@@ -1,5 +1,5 @@
 {
-    "name": "mcp-integration-suite",
+    "name": "mcp-integration-suite-chris",
     "version": "1.0.0",
     "description": "MCP Server für Integration Package Management",
     "main": "dist/server.js",
@@ -16,7 +16,7 @@
         "watch:log": "tail -n 20 -F ~/Library/Logs/Claude/mcp-server-mcp-integration-suite.log"
     },
     "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.8.0",
+        "@modelcontextprotocol/sdk": "^1.13.0",
         "@sap-cloud-sdk/connectivity": "^3.26.4",
         "@sap-cloud-sdk/http-client": "^3.26.4",
         "@sap-cloud-sdk/odata-v2": "^3.26.4",

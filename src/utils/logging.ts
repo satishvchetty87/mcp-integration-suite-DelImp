@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import util from "util";
-import { projPath } from "..";
+import { projPath } from "./shared";
 
 const log_file = fs.createWriteStream(path.resolve(projPath, "serverlog.txt"), {
 	flags: "a",

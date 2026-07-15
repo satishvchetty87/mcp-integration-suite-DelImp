@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { contentReturnElement } from "./middleware";
-import { logError } from "..";
+import { logError } from "./shared";
 
 export const formatError = (error: any): contentReturnElement => {
 	const errReturn = extractAxiosError(error);

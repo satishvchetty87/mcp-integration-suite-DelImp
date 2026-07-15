@@ -1,6 +1,8 @@
 import path from "path";
 import http from "http";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { randomUUID } from "crypto";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { registerAllHandlers } from "./handlers";
 import { config } from "dotenv";
 import { McpServerWithMiddleware } from "./utils/middleware";
@@ -33,59 +35,111 @@ process.on("uncaughtException", (err) => {
 
 const PORT = parseInt(process.env.PORT || "3000");
 
-// Store active transports by session ID
-const transports = new Map<string, SSEServerTransport>();
+// Store active Streamable HTTP transports by session ID
+const transports = new Map<string, StreamableHTTPServerTransport>();
+
+// Read and JSON-parse a request body (Streamable HTTP posts JSON-RPC messages).
+const readJsonBody = (req: http.IncomingMessage): Promise<any> =>
+    new Promise((resolve, reject) => {
+        let raw = "";
+        req.on("data", (chunk) => { raw += chunk; });
+        req.on("end", () => {
+            if (!raw) { resolve(undefined); return; }
+            try { resolve(JSON.parse(raw)); } catch (err) { reject(err); }
+        });
+        req.on("error", reject);
+    });
 
 const httpServer = http.createServer(async (req, res) => {
 
     // Health check for CF
     if (req.method === "GET" && req.url === "/health") {
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ status: "ok", service: "mcp-integration-suite" }));
+        res.end(JSON.stringify({ status: "ok", service: "mcp-integration-suite-chris" }));
         return;
     }
 
-    // SSE connection endpoint
-    if (req.method === "GET" && req.url === "/sse") {
-        logInfo("New SSE connection established");
+    // Streamable HTTP endpoint (replaces the deprecated SSE transport)
+    if (req.url?.startsWith("/mcp")) {
+        const sessionId = req.headers["mcp-session-id"] as string | undefined;
 
-        const mcpServer = new McpServerWithMiddleware(
-            { name: "integration-suite", version: "1.0.0" },
-            { capabilities: { resources: {}, tools: {} } }
-        );
-        registerAllHandlers(mcpServer);
+        // POST: client -> server JSON-RPC messages
+        if (req.method === "POST") {
+            let body: any;
+            try {
+                body = await readJsonBody(req);
+            } catch {
+                res.writeHead(400, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({
+                    jsonrpc: "2.0",
+                    error: { code: -32700, message: "Parse error: invalid JSON" },
+                    id: null,
+                }));
+                return;
+            }
 
-        const transport = new SSEServerTransport("/messages", res);
+            let transport: StreamableHTTPServerTransport;
 
-        transports.set(transport.sessionId, transport);
+            if (sessionId && transports.has(sessionId)) {
+                // Reuse the transport for an established session
+                transport = transports.get(sessionId)!;
+            } else if (!sessionId && isInitializeRequest(body)) {
+                // New session: create a transport + server and connect them
+                transport = new StreamableHTTPServerTransport({
+                    sessionIdGenerator: () => randomUUID(),
+                    onsessioninitialized: (sid) => {
+                        logInfo(`Streamable HTTP session initialized: ${sid}`);
+                        transports.set(sid, transport);
+                    },
+                });
 
-        transport.onclose = () => {
-            logInfo(`SSE connection closed: ${transport.sessionId}`);
-            transports.delete(transport.sessionId);
-        };
+                transport.onclose = () => {
+                    if (transport.sessionId) {
+                        logInfo(`Streamable HTTP session closed: ${transport.sessionId}`);
+                        transports.delete(transport.sessionId);
+                    }
+                };
 
-        await mcpServer.connect(transport);
-        return;
-    }
+                const mcpServer = new McpServerWithMiddleware(
+                    { name: "integration-suite", version: "1.0.0" },
+                    { capabilities: { resources: {}, tools: {} } }
+                );
+                registerAllHandlers(mcpServer);
 
-    // Message POST endpoint
-    if (req.method === "POST" && req.url?.startsWith("/messages")) {
-        const urlParams = new URL(req.url, `http://localhost`).searchParams;
-        const sessionId = urlParams.get("sessionId") ?? "";
+                await mcpServer.connect(transport);
+            } else {
+                // No valid session and not an initialize request
+                res.writeHead(400, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({
+                    jsonrpc: "2.0",
+                    error: { code: -32000, message: "Bad Request: No valid session ID provided" },
+                    id: null,
+                }));
+                return;
+            }
 
-        let transport = transports.get(sessionId);
-
-        if (!transport && transports.size === 1) {
-            transport = transports.values().next().value;
-        }
-
-        if (!transport) {
-            res.writeHead(404, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "No active session found" }));
+            await transport.handleRequest(req, res, body);
             return;
         }
 
-        await transport.handlePostMessage(req, res);
+        // GET: server -> client notification stream; DELETE: terminate session
+        if (req.method === "GET" || req.method === "DELETE") {
+            if (!sessionId || !transports.has(sessionId)) {
+                res.writeHead(400, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({
+                    jsonrpc: "2.0",
+                    error: { code: -32000, message: "Bad Request: Invalid or missing session ID" },
+                    id: null,
+                }));
+                return;
+            }
+
+            await transports.get(sessionId)!.handleRequest(req, res);
+            return;
+        }
+
+        res.writeHead(405, { "Allow": "GET, POST, DELETE" });
+        res.end();
         return;
     }
 

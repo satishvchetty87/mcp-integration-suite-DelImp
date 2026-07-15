@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { logInfo, projPath } from "..";
+import { logInfo, projPath } from "./shared";
 import AdmZip from "adm-zip";
 import path from "node:path";
 import { rimraf } from "rimraf";

@@ -10,3 +10,4 @@ src/generated/**
 errorlog.txt
 coverage
 manifest.yml
+login.sh

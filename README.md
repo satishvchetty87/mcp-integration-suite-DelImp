@@ -6,18 +6,37 @@ For more details/setup instructions please check out [this blog](https://communi
 
 There is another MCP-Server available for accessing TPM Content: https://github.com/1nbuc/mcp-is-tpm
 
+## Deployment modes
+
+This server can run in two ways — pick the one that matches your client:
+
+| Mode | Transport | Typical client | Guide |
+|---|---|---|---|
+| **Local** | stdio | Claude Desktop, Cline (runs on your machine) | **this README** (below) |
+| **Cloud Foundry** | Streamable HTTP | **Joule**, remote MCP clients | **[DEPLOYMENT.md](DEPLOYMENT.md)** |
+
+The rest of **this README** (from the upstream repo) covers the **local** setup and
+connecting to **Claude Desktop**. For deploying to SAP BTP Cloud Foundry and connecting
+**Joule**, follow **[DEPLOYMENT.md](DEPLOYMENT.md)** instead — that path uses environment
+variables in CF (not a local `.env`) and the HTTP `/mcp` endpoint.
+
 ## Requirements
 NodeJs and NPM (Node Version > 20 because of native NodeJS fetch)
 
-## Installation
+## Local installation & connecting to Claude Desktop
+
+> This section is for **local (stdio)** use with Claude Desktop or other desktop MCP clients.
+> For **Cloud Foundry + Joule**, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ```sh
 git clone https://github.com/1nbuc/mcp-integration-suite.git
 cd mcp-integration-suite
 npm install
 npm run build
-cp .env.example .env
+cp .env.example .env   # then fill in API_BASE_URL and one auth method (OAuth or API_USER/API_PASS)
 ```
-Add this to your AI Clients MCP Config. 
+
+Add this to your AI Client's MCP config. 
 For Claude Desktop: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 ```json
 {

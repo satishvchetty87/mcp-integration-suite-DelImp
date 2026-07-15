@@ -1,5 +1,5 @@
 import { DestinationAuthToken } from "@sap-cloud-sdk/connectivity";
-import { logError } from "..";
+import { logError } from "../utils/shared";
 
 let tokenCache: {
 	token: DestinationAuthToken;

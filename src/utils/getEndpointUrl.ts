@@ -1,4 +1,4 @@
-import { logInfo } from "..";
+import { logInfo } from "./shared";
 import { ServiceEndpoints } from "../generated/IntegrationContent";
 
 /**

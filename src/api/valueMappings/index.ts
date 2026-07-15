@@ -1,6 +1,6 @@
 import { integrationContent } from "../../generated/IntegrationContent";
 import { getCurrentDestination } from "../api_destination";
-import { logInfo } from "../..";
+import { logInfo } from "../../utils/shared";
 
 const { valueMappingDesigntimeArtifactsApi } = integrationContent();
 

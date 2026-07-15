@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import path from "path";
-import { logInfo } from "..";
+import { logInfo } from "./shared";
 import { appendFile, mkdir, writeFile } from "fs/promises";
 
 /**
